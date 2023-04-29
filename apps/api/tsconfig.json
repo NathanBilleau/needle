@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "outDir": "dist",
+    "rootDir": "src",
+    "esModuleInterop": true,
+    //  express
+    "moduleResolution": "node",
+    "lib": ["ESNext"],
+    "target": "es5",
+    // "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+
+  },
+  "include": ["src"],
+  "references": [{ "path": "../../packages/spotify" } ]
+}

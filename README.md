@@ -5,12 +5,12 @@ Generate a social video from a Spotify playlist (discovery of the week)
 ## Learnings
 
 - Spotify API
-- Deno
 - Remotion
 - Instagram / Tiktok API 
+- Yarn workspaces
 
 ## Time tracking
 
-Total spent : 1h30
+Total spent : 2h30
 
-Current session started at ...
+Current session started at 

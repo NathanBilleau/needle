@@ -1,6 +1,4 @@
-import { env } from "../deps.ts";
-import { TokenResponse, UserProfile } from "../interfaces/spotify.ts";
-import { get, post } from "../utils/fetch.ts";
+import { TokenResponse, UserProfile } from "./interfaces/auth";
 
 /**
  * Generate auth url to get Authorization Code
@@ -11,8 +9,8 @@ export const generateAuthUrl = () => {
 
   const params = new URLSearchParams({
     response_type: "code",
-    client_id: env["SPOTIFY_CLIENT_ID"] || "",
-    client_secret: env["SPOTIFY_CLIENT_SECRET"] || "",
+    client_id: process.env.SPOTIFY_CLIENT_ID || "",
+    client_secret: process.env.SPOTIFY_CLIENT_SECRET || "",
     scope: "user-read-private user-read-email",
     redirect_uri: "http://localhost:8000/callback",
     state,
@@ -31,17 +29,19 @@ export const generateUserToken = async (
     grant_type: "authorization_code",
     code,
     redirect_uri: "http://localhost:8000/callback",
-    client_id: env["SPOTIFY_CLIENT_ID"] || "",
-    client_secret: env["SPOTIFY_CLIENT_SECRET"] || "",
+    client_id: process.env.SPOTIFY_CLIENT_ID || "",
+    client_secret: process.env.SPOTIFY_CLIENT_SECRET || "",
   });
 
-  const token = await post(
-    "https://accounts.spotify.com/api/token",
-    "",
-    params.toString(),
-  );
+  const token = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: params.toString(),
+  });
 
-  return token;
+  return await token.json();
 };
 
 /**
@@ -53,18 +53,30 @@ export const refreshUserToken = async (
   const params = new URLSearchParams({
     grant_type: "refresh_token",
     refresh_token: refreshToken,
-    client_id: env["SPOTIFY_CLIENT_ID"] || "",
-    client_secret: env["SPOTIFY_CLIENT_SECRET"] || "",
+    client_id: process.env.SPOTIFY_CLIENT_ID || "",
+    client_secret: process.env.SPOTIFY_CLIENT_SECRET || "",
   });
 
-  const token = await post("https://accounts.spotify.com/api/token", '', params.toString());
-  return token;
+  const token = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: params.toString(),
+  });
+
+  return await token.json();
 };
 
 /**
  * Get the current user's profile
  */
 export const getCurrentUser = async (token: string): Promise<UserProfile> => {
-  const user = await get("https://api.spotify.com/v1/me", token);
-  return user;
+  const user = await fetch("https://api.spotify.com/v1/me", {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+
+  return await user.json();
 };
