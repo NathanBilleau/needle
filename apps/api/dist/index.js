@@ -70,9 +70,9 @@ var express_1 = __importDefault(require("express"));
 var spotify_1 = require("spotify");
 var app = (0, express_1.default)();
 var port = 8000;
-var responseToken;
+var spotify = new spotify_1.Spotify(process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
 app.get("/", function (req, res) {
-    res.redirect((0, spotify_1.generateAuthUrl)());
+    res.redirect(spotify.generateAuthUrl());
 });
 app.get("/callback", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var code;
@@ -81,10 +81,9 @@ app.get("/callback", function (req, res) { return __awaiter(void 0, void 0, void
         switch (_b.label) {
             case 0:
                 code = (_a = req.query.code) === null || _a === void 0 ? void 0 : _a.toString();
-                return [4 /*yield*/, (0, spotify_1.generateUserToken)(code || "")];
+                return [4 /*yield*/, spotify.generateUserToken(code || "")];
             case 1:
-                responseToken = _b.sent();
-                console.log(responseToken);
+                _b.sent();
                 res.redirect("/me");
                 return [2 /*return*/];
         }
@@ -94,9 +93,7 @@ app.get("/me", function (req, res) { return __awaiter(void 0, void 0, void 0, fu
     var user;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                console.log(responseToken === null || responseToken === void 0 ? void 0 : responseToken.access_token);
-                return [4 /*yield*/, (0, spotify_1.getCurrentUser)(responseToken === null || responseToken === void 0 ? void 0 : responseToken.access_token)];
+            case 0: return [4 /*yield*/, spotify.getCurrentUser()];
             case 1:
                 user = _a.sent();
                 res.send(user);
@@ -108,7 +105,7 @@ app.get("/playlists", function (req, res) { return __awaiter(void 0, void 0, voi
     var playlists;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, spotify_1.getCurrentUserPlaylists)(responseToken === null || responseToken === void 0 ? void 0 : responseToken.access_token)];
+            case 0: return [4 /*yield*/, spotify.getCurrentUserPlaylists()];
             case 1:
                 playlists = _a.sent();
                 res.send(playlists);
@@ -122,10 +119,24 @@ app.get("/playlists/:id", function (req, res) { return __awaiter(void 0, void 0,
         switch (_a.label) {
             case 0:
                 playlistId = req.params.id;
-                return [4 /*yield*/, (0, spotify_1.getCurrentUserPlaylistTracks)(responseToken === null || responseToken === void 0 ? void 0 : responseToken.access_token, playlistId)];
+                return [4 /*yield*/, spotify.getCurrentUserPlaylistTracks(playlistId)];
             case 1:
                 playlist = _a.sent();
                 res.send(playlist);
+                return [2 /*return*/];
+        }
+    });
+}); });
+app.get('/tracks/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var trackId, track;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                trackId = req.params.id;
+                return [4 /*yield*/, spotify.getTrack(trackId)];
+            case 1:
+                track = _a.sent();
+                res.send(track);
                 return [2 /*return*/];
         }
     });

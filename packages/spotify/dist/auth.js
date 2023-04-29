@@ -36,101 +36,186 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCurrentUser = exports.refreshUserToken = exports.generateUserToken = exports.generateAuthUrl = void 0;
-/**
- * Generate auth url to get Authorization Code
- */
-var generateAuthUrl = function () {
-    var state = Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15);
-    var params = new URLSearchParams({
-        response_type: "code",
-        client_id: process.env.SPOTIFY_CLIENT_ID || "",
-        client_secret: process.env.SPOTIFY_CLIENT_SECRET || "",
-        scope: "user-read-private user-read-email",
-        redirect_uri: "http://localhost:8000/callback",
-        state: state,
-    });
-    return "https://accounts.spotify.com/authorize?" + params.toString();
-};
-exports.generateAuthUrl = generateAuthUrl;
-/**
- * Generate user token
- */
-var generateUserToken = function (code) { return __awaiter(void 0, void 0, void 0, function () {
-    var params, token;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                params = new URLSearchParams({
-                    grant_type: "authorization_code",
-                    code: code,
-                    redirect_uri: "http://localhost:8000/callback",
-                    client_id: process.env.SPOTIFY_CLIENT_ID || "",
-                    client_secret: process.env.SPOTIFY_CLIENT_SECRET || "",
-                });
-                return [4 /*yield*/, fetch("https://accounts.spotify.com/api/token", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                        },
-                        body: params.toString(),
-                    })];
-            case 1:
-                token = _a.sent();
-                return [4 /*yield*/, token.json()];
-            case 2: return [2 /*return*/, _a.sent()];
-        }
-    });
-}); };
-exports.generateUserToken = generateUserToken;
-/**
- * Refresh user token
- */
-var refreshUserToken = function (refreshToken) { return __awaiter(void 0, void 0, void 0, function () {
-    var params, token;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                params = new URLSearchParams({
-                    grant_type: "refresh_token",
-                    refresh_token: refreshToken,
-                    client_id: process.env.SPOTIFY_CLIENT_ID || "",
-                    client_secret: process.env.SPOTIFY_CLIENT_SECRET || "",
-                });
-                return [4 /*yield*/, fetch("https://accounts.spotify.com/api/token", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                        },
-                        body: params.toString(),
-                    })];
-            case 1:
-                token = _a.sent();
-                return [4 /*yield*/, token.json()];
-            case 2: return [2 /*return*/, _a.sent()];
-        }
-    });
-}); };
-exports.refreshUserToken = refreshUserToken;
-/**
- * Get the current user's profile
- */
-var getCurrentUser = function (token) { return __awaiter(void 0, void 0, void 0, function () {
-    var user;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, fetch("https://api.spotify.com/v1/me", {
-                    headers: {
-                        Authorization: "Bearer " + token,
-                    },
-                })];
-            case 1:
-                user = _a.sent();
-                return [4 /*yield*/, user.json()];
-            case 2: return [2 /*return*/, _a.sent()];
-        }
-    });
-}); };
-exports.getCurrentUser = getCurrentUser;
+exports.Spotify = void 0;
+var Spotify = /** @class */ (function () {
+    function Spotify(client_id, client_secret) {
+        var _this = this;
+        this.client_id = "";
+        this.client_secret = "";
+        this.token = "";
+        this.refreshToken = "";
+        this.expires_in = 0;
+        /**
+         * Generate auth url to get Authorization Code
+         */
+        this.generateAuthUrl = function () {
+            var state = Math.random().toString(36).substring(2, 15) +
+                Math.random().toString(36).substring(2, 15);
+            var params = new URLSearchParams({
+                response_type: "code",
+                client_id: _this.client_id,
+                client_secret: _this.client_secret,
+                scope: "user-read-private user-read-email",
+                redirect_uri: "http://localhost:8000/callback",
+                state: state,
+            });
+            return "https://accounts.spotify.com/authorize?" + params.toString();
+        };
+        /**
+         * Generate user token
+         */
+        this.generateUserToken = function (code) { return __awaiter(_this, void 0, void 0, function () {
+            var params, token, response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        params = new URLSearchParams({
+                            grant_type: "authorization_code",
+                            code: code,
+                            redirect_uri: "http://localhost:8000/callback",
+                            client_id: this.client_id,
+                            client_secret: this.client_secret,
+                        });
+                        return [4 /*yield*/, fetch("https://accounts.spotify.com/api/token", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded",
+                                },
+                                body: params.toString(),
+                            })];
+                    case 1:
+                        token = _a.sent();
+                        return [4 /*yield*/, token.json()];
+                    case 2:
+                        response = _a.sent();
+                        this.token = response.access_token;
+                        this.refreshToken = response.refresh_token;
+                        this.expires_in = response.expires_in;
+                        this.autoRefreshUserToken(code);
+                        return [2 /*return*/];
+                }
+            });
+        }); };
+        /**
+         * Automatically refresh user token
+         */
+        this.autoRefreshUserToken = function (code) { return __awaiter(_this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, this.generateUserToken(code)];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }, this.expires_in * 1000 - 60 * 1000);
+                return [2 /*return*/];
+            });
+        }); };
+        // /**
+        //  * Refresh user token
+        //  */
+        // refreshUserToken = async (
+        //   refreshToken: string,
+        // ): Promise<TokenResponse> => {
+        //   const params = new URLSearchParams({
+        //     grant_type: "refresh_token",
+        //     refresh_token: refreshToken,
+        //     client_id: process.env.SPOTIFY_CLIENT_ID || "",
+        //     client_secret: process.env.SPOTIFY_CLIENT_SECRET || "",
+        //   });
+        //   const token = await fetch("https://accounts.spotify.com/api/token", {
+        //     method: "POST",
+        //     headers: {
+        //       "Content-Type": "application/x-www-form-urlencoded",
+        //     },
+        //     body: params.toString(),
+        //   });
+        //   return await token.json();
+        // };
+        /**
+         * Get the current user's profile
+         */
+        this.getCurrentUser = function () { return __awaiter(_this, void 0, void 0, function () {
+            var user;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, fetch("https://api.spotify.com/v1/me", {
+                            headers: {
+                                Authorization: "Bearer " + this.token,
+                            },
+                        })];
+                    case 1:
+                        user = _a.sent();
+                        return [4 /*yield*/, user.json()];
+                    case 2: return [2 /*return*/, _a.sent()];
+                }
+            });
+        }); };
+        /**
+         * Get the current user's playlists
+         */
+        this.getCurrentUserPlaylists = function () { return __awaiter(_this, void 0, void 0, function () {
+            var playlists;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, fetch("https://api.spotify.com/v1/me/playlists", {
+                            headers: {
+                                Authorization: "Bearer " + this.token,
+                            },
+                        })];
+                    case 1:
+                        playlists = _a.sent();
+                        return [4 /*yield*/, playlists.json()];
+                    case 2: return [2 /*return*/, _a.sent()];
+                }
+            });
+        }); };
+        /**
+         * Get the current user playlist tracks
+         */
+        this.getCurrentUserPlaylistTracks = function (playlistId) { return __awaiter(_this, void 0, void 0, function () {
+            var playlists;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, fetch("https://api.spotify.com/v1/playlists/".concat(playlistId, "/tracks"), {
+                            headers: {
+                                Authorization: "Bearer " + this.token,
+                            },
+                        })];
+                    case 1:
+                        playlists = _a.sent();
+                        return [4 /*yield*/, playlists.json()];
+                    case 2: return [2 /*return*/, _a.sent()];
+                }
+            });
+        }); };
+        /**
+         * Get track details
+         */
+        this.getTrack = function (trackId) { return __awaiter(_this, void 0, void 0, function () {
+            var track;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, fetch("https://api.spotify.com/v1/tracks/".concat(trackId), {
+                            headers: {
+                                Authorization: "Bearer " + this.token,
+                            },
+                        })];
+                    case 1:
+                        track = _a.sent();
+                        return [4 /*yield*/, track.json()];
+                    case 2: return [2 /*return*/, _a.sent()];
+                }
+            });
+        }); };
+        this.client_id = client_id;
+        this.client_secret = client_secret;
+    }
+    return Spotify;
+}());
+exports.Spotify = Spotify;
 //# sourceMappingURL=auth.js.map
