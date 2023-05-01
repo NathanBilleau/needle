@@ -11,4 +11,4 @@ Generate a social video from a Spotify playlist (discovery of the week)
 
 ## Time tracking
 
-Total spent 6h
+Total spent 6h30

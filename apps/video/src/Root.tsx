@@ -4,7 +4,7 @@ loadFont();
 import SongSequence from './components/SongSequence';
 
 const fps = 30;
-const durationInSeconds = 60;
+const durationInSeconds = 40;
 
 export const RemotionRoot: React.FC = () => {
 	return (

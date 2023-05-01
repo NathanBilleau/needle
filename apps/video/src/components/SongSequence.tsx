@@ -18,7 +18,7 @@ const songs = [
     title: "Bohemian Rhapsody",
     artist: "Queen",
     duration: 5 * 60 + 55,
-    previewUrl: 'bimbom.mp3',
+    previewUrl: 'lalala.wav',
     cover: 'https://images.unsplash.com/photo-1681906374707-40c5f2c7c8d6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1439&q=80',
     color: '#939da6'
   },
@@ -43,6 +43,7 @@ const SongSequence = () => {
 
   const currentSong = songs[currentSongIndex];
 
+  // FIXME: causes flickering
   useEffect(() => {
     if (frame % songsDurationInFrames === 0) {
       setCurrentSongIndex((currentSongIndex + 1) % (songs.length));
