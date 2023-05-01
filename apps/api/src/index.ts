@@ -1,16 +1,10 @@
+import express from "express";
+import { Spotify } from "spotify";
 import * as dotenv from "dotenv";
 dotenv.config({
   path: "../../.env",
 });
 
-import express from "express";
-
-import {
-  getCurrentUserPlaylists,
-  getCurrentUserPlaylistTracks,
-  Spotify,
-  TokenResponse,
-} from "spotify";
 
 const app = express();
 const port = 8000;
@@ -50,7 +44,7 @@ app.get("/playlists/:id", async (req, res) => {
   res.send(playlist);
 });
 
-app.get('/tracks/:id', async (req, res) => {
+app.get("/tracks/:id", async (req, res) => {
   const trackId = req.params.id;
 
   const track = await spotify.getTrack(trackId);

@@ -1,0 +1,57 @@
+$dropShadow: drop-shadow(0px 4px 154px rgba(0, 0, 0, 0.6));
+
+.playerContainer {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .cover {
+    aspect-ratio: 1;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 3rem;
+    filter: $dropShadow;
+  }
+
+  .playerContainer {
+    transform: translateY(-50%);
+    width: 95%;
+
+    .player {
+      width: 100%;
+      height: 100px;
+      background-color: rgba(black, 0.5);
+      border-radius: 2rem;
+      filter: $dropShadow;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 15px;
+      gap: 1rem;
+
+      backdrop-filter: blur(7px);
+      color: white;
+      font-family: "Outfit";
+
+      .songInformation {
+        display: flex;
+        flex-direction: column;
+
+        .title,
+        .artist {
+          text-align: center;
+        }
+
+        .title {
+          font-weight: 600;
+        }
+
+        .artist {
+          font-size: 400;
+        }
+      }
+    }
+  }
+}
