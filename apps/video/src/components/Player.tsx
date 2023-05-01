@@ -1,5 +1,6 @@
+
 import { FC } from 'react';
-import { Img, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { Audio, Img, spring, useCurrentFrame, useVideoConfig, staticFile } from 'remotion';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from './Player.module.scss';
@@ -39,7 +40,7 @@ const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl }) => {
   });
 
   return (
-    <div className={styles.playerContainer}>
+    <div className={styles.container}>
       <Img
         src={cover}
         className={styles.cover}
@@ -63,6 +64,8 @@ const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl }) => {
               {artist}
             </span>
           </div>
+
+          <Audio src={staticFile(previewUrl)} />
 
           <div className={styles.visualisationContainer}>
             visualisation
