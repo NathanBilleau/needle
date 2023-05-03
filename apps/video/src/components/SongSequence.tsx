@@ -61,7 +61,10 @@ const SongSequence = () => {
         <Series>
           {
             songs.map((song, index) => (
-              <Series.Sequence key={index} layout="none" durationInFrames={songsDurationInFrames}>
+              <Series.Sequence
+                key={index}
+                layout="none"
+                durationInFrames={songsDurationInFrames}>
                 <Player
                   key={index}
                   cover={song.cover}
@@ -71,6 +74,7 @@ const SongSequence = () => {
                   previewUrl={song.previewUrl}
                   color={song.color}
                   isPlaying={(color) => setColor(color)}
+                  previousColor={index > 0 ? songs[index - 1].color : '#000'}
                 />
               </Series.Sequence>
             ))

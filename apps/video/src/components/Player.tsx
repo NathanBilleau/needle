@@ -13,10 +13,12 @@ interface Props {
   duration: number;
   previewUrl: string;
   color: string;
+
   isPlaying?: (color: string) => void
+  previousColor: string
 }
 
-const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl, color, isPlaying }) => {
+const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl, color, isPlaying, previousColor }) => {
 
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -24,14 +26,12 @@ const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl, color, 
 
   const audioData = useAudioData(staticFile(previewUrl));
 
-  const colorTransition = interpolateColors(frame, [0, .2 * fps], ['#000', color]);
+  const colorTransition = interpolateColors(frame, [0, .3 * fps], [previousColor, color]);
   isPlaying?.(colorTransition);
-
 
   if (!audioData) {
     return null;
   }
-
 
   const visualization = visualizeAudio({
     fps,
