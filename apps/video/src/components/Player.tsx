@@ -1,6 +1,6 @@
 
-import { FC } from 'react';
-import { Audio, Img, spring, useCurrentFrame, useVideoConfig, staticFile } from 'remotion';
+import { FC, useEffect } from 'react';
+import { Audio, Img, spring, useCurrentFrame, useVideoConfig, staticFile, interpolateColors } from 'remotion';
 import { useAudioData, visualizeAudio } from "@remotion/media-utils";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -12,9 +12,11 @@ interface Props {
   artist: string;
   duration: number;
   previewUrl: string;
+  color: string;
+  isPlaying?: (color: string) => void
 }
 
-const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl }) => {
+const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl, color, isPlaying }) => {
 
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -22,15 +24,20 @@ const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl }) => {
 
   const audioData = useAudioData(staticFile(previewUrl));
 
+  const colorTransition = interpolateColors(frame, [0, .2 * fps], ['#000', color]);
+  isPlaying?.(colorTransition);
+
+
   if (!audioData) {
     return null;
   }
+
 
   const visualization = visualizeAudio({
     fps,
     frame,
     audioData,
-    numberOfSamples: 32,
+    numberOfSamples: 16,
     smoothing: true,
   });
 
@@ -89,7 +96,7 @@ const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl }) => {
                   key={index}
                   className={styles.visualisation}
                   style={{
-                    height: `${v * 500}%`,
+                    height: `${v * 200}%`,
                   }}
                 />
               ))
