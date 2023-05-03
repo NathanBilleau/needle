@@ -11,13 +11,13 @@ $dropShadow: drop-shadow(0px 4px 100px rgba(0, 0, 0, 0.4));
     aspect-ratio: 1;
     width: 100%;
     object-fit: cover;
-    border-radius: 3rem;
+    border-radius: 4rem;
     filter: $dropShadow;
   }
 
   .playerContainer {
     transform: translateY(-50%);
-    width: 95%;
+    width: calc(100% - 2rem);
 
     .player {
       width: 100%;
@@ -29,7 +29,7 @@ $dropShadow: drop-shadow(0px 4px 100px rgba(0, 0, 0, 0.4));
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20px 15px;
+      padding: 20px;
       gap: 1rem;
 
       backdrop-filter: blur(7px);
@@ -57,6 +57,7 @@ $dropShadow: drop-shadow(0px 4px 100px rgba(0, 0, 0, 0.4));
         .title,
         .artist {
           text-align: center;
+          font-size: 1.4rem;
         }
 
         .title {
@@ -65,7 +66,14 @@ $dropShadow: drop-shadow(0px 4px 100px rgba(0, 0, 0, 0.4));
 
         .artist {
           font-size: 400;
+          opacity: 0.6;
         }
+      }
+
+      .duration {
+        // text-align: center;
+        font-size: 1.4rem;
+        opacity: 0.6;
       }
     }
   }

@@ -9,6 +9,18 @@
 
   .playersContainer {
     display: flex;
-    width: 70%;
+    width: 80%;
+  }
+
+  .weekTitle {
+    color: rgba(#fff, 0.5);
+    font-family: "Outfit";
+    font-size: 5rem;
+    font-weight: bold;
+    margin: 0;
+
+    .weekNumber {
+      color: rgba(#fff, 1);
+    }
   }
 }

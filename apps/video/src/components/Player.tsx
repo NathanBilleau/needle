@@ -1,7 +1,7 @@
 
-import { FC, useEffect } from 'react';
-import { Audio, Img, spring, useCurrentFrame, useVideoConfig, staticFile, interpolateColors } from 'remotion';
 import { useAudioData, visualizeAudio } from "@remotion/media-utils";
+import { FC } from 'react';
+import { Audio, Img, interpolateColors, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from './Player.module.scss';

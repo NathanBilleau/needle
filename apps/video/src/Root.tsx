@@ -3,7 +3,7 @@ import { loadFont } from '@remotion/google-fonts/Outfit';
 loadFont();
 import SongSequence from './components/SongSequence';
 
-const fps = 30;
+const fps = 60;
 const durationInSeconds = 30;
 
 export const RemotionRoot: React.FC = () => {

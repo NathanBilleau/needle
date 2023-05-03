@@ -2,7 +2,7 @@ import { useState } from "react";
 import Player from "../components/Player";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { Series, interpolate, interpolateColors, useCurrentFrame, useVideoConfig } from "remotion";
+import { Series, useVideoConfig } from "remotion";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from "./SongSequence.module.scss";
@@ -55,7 +55,7 @@ const SongSequence = () => {
     <div className={styles.songSequenceContainer} style={{
       backgroundColor: color,
     }}>
-      <span>week</span>
+      <h1 className={styles.weekTitle}>week <span className={styles.weekNumber}>#18</span></h1>
 
       <div className={styles.playersContainer}>
         <Series>
