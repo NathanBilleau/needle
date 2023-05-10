@@ -1,22 +1,32 @@
 import { TokenResponse, UserProfile } from "./interfaces/auth";
+import { Playlist, Track } from "./interfaces/music";
+import { Response } from "./interfaces/response";
 
 export class Spotify {
-  client_id = "";
-  client_secret = "";
+  static client_id = "";
+  static client_secret = "";
 
-  token = "";
-  refreshToken = "";
-  expires_in = 0;
+  static token = "";
+  static refreshToken = "";
+  static expires_in = 0;
 
-  constructor(client_id: string, client_secret: string) {
+  // constructor(client_id: string, client_secret: string) {
+  //   this.client_id = client_id;
+  //   this.client_secret = client_secret;
+  // }
+
+  /**
+   * Set client id and client secret
+   */
+  static setClient = (client_id: string, client_secret: string) => {
     this.client_id = client_id;
     this.client_secret = client_secret;
-  }
+  };
 
   /**
    * Generate auth url to get Authorization Code
    */
-  generateAuthUrl = () => {
+  static generateAuthUrl = () => {
     const state = Math.random().toString(36).substring(2, 15) +
       Math.random().toString(36).substring(2, 15);
 
@@ -35,7 +45,7 @@ export class Spotify {
   /**
    * Generate user token
    */
-  generateUserToken = async (
+  static generateUserToken = async (
     code: string,
   ) => {
     const params = new URLSearchParams({
@@ -66,7 +76,7 @@ export class Spotify {
   /**
    * Automatically refresh user token
    */
-  autoRefreshUserToken = async (
+  static autoRefreshUserToken = async (
     code: string,
   ) => {
     setTimeout(async () => {
@@ -77,7 +87,7 @@ export class Spotify {
   /**
    * Get the current user's profile
    */
-  getCurrentUser = async (): Promise<UserProfile> => {
+  static getCurrentUser = async (): Promise<UserProfile> => {
     const user = await fetch("https://api.spotify.com/v1/me", {
       headers: {
         Authorization: "Bearer " + this.token,
@@ -90,7 +100,7 @@ export class Spotify {
   /**
    * Get the current user's playlists
    */
-  getCurrentUserPlaylists = async () => {
+  static getCurrentUserPlaylists = async (): Promise<Response<Playlist>> => {
     const playlists = await fetch("https://api.spotify.com/v1/me/playlists", {
       headers: {
         Authorization: "Bearer " + this.token,
@@ -103,7 +113,7 @@ export class Spotify {
   /**
    * Get the current user playlist tracks
    */
-  getCurrentUserPlaylistTracks = async (playlistId: string) => {
+  static getPlaylistTracks = async (playlistId: string): Promise<Response<Track>> => {
     const playlists = await fetch(
       `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
       {
@@ -119,7 +129,7 @@ export class Spotify {
   /**
    * Get track details
    */
-  getTrack = async (trackId: string) => {
+  static getTrack = async (trackId: string) => {
     const track = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
       headers: {
         Authorization: "Bearer " + this.token,

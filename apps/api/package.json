@@ -10,6 +10,8 @@
     "dev": "nodemon src/index.ts"
   },
   "dependencies": {
+    "@remotion/bundler": "^3.3.91",
+    "@remotion/renderer": "^3.3.91",
     "express": "^4.18.2",
     "spotify": "*"
   },

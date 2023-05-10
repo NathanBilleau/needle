@@ -7,43 +7,12 @@ import { useColor } from "../contexts/ColorContext";
 // @ts-ignore
 import styles from "./SongSequence.module.scss";
 
-const songs = [
-  {
-    title: "Space train",
-    artist: "Spiral Drive",
-    duration: 3 * 60 + 28,
-    previewUrl: 'bimbom.mp3',
-    cover: 'https://picsum.photos/id/237/700/700',
-  },
-  {
-    title: "Bohemian Rhapsody",
-    artist: "Queen",
-    duration: 5 * 60 + 55,
-    previewUrl: 'lalala.wav',
-    cover: 'https://picsum.photos/id/238/700/700',
-  },
-  {
-    title: "Wish you were here",
-    artist: "Pink Floyd",
-    duration: 5 * 60 + 40,
-    previewUrl: 'summer.wav',
-    cover: 'https://picsum.photos/id/239/700/700',
-  },
-  {
-    title: "The Wall",
-    artist: "Pink Floyd",
-    duration: 5 * 60 + 40,
-    previewUrl: 'canoe.mp3',
-    cover: 'https://picsum.photos/id/240/700/700',
-  }
-];
-
 const maxDuration = 20;
 const minDuration = 5;
 
-const SongSequence = () => {
+const SongSequence = ({ tracks }: { tracks : any}) => {
   const { durationInFrames, fps } = useVideoConfig();
-  const songsDurationInFrames = Math.min(maxDuration * fps, Math.max(minDuration * fps, durationInFrames / songs.length));
+  const songsDurationInFrames = Math.min(maxDuration * fps, Math.max(minDuration * fps, durationInFrames / tracks.length));
   const { currentColor } = useColor();
 
   return (
@@ -55,17 +24,16 @@ const SongSequence = () => {
       <div className={styles.playersContainer}>
         <Series>
           {
-            songs.map((song, index) => (
+            tracks.map((song: any) => (
               <Series.Sequence
-                key={index}
+                key={song.id}
                 layout="none"
                 durationInFrames={songsDurationInFrames}>
                 <Player
-                  key={index}
-                  cover={song.cover}
-                  title={song.title}
-                  artist={song.artist}
-                  duration={song.duration}
+                  cover={song.image}
+                  title={song.name}
+                  artist={song.artists}
+                  duration={0}
                   previewUrl={song.previewUrl}
                 />
               </Series.Sequence>

@@ -20,7 +20,7 @@ export interface UserProfile {
     type: string;
     uri: string;
 }
-interface Image {
+export interface Image {
     url: string;
     height: number;
     width: number;
@@ -32,5 +32,4 @@ export interface TokenResponse {
     scope: string;
     refresh_token: string;
 }
-export {};
 //# sourceMappingURL=auth.d.ts.map

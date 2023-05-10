@@ -16,7 +16,7 @@ export interface UserProfile {
   uri: string;
 }
 
-interface Image {
+export interface Image {
   url: string;
   height: number;
   width: number;

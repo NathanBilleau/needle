@@ -63,16 +63,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var dotenv = __importStar(require("dotenv"));
+var express_1 = __importDefault(require("express"));
+var spotify_1 = require("spotify");
+var needle_1 = require("./needle");
 dotenv.config({
     path: "../../.env",
 });
-var express_1 = __importDefault(require("express"));
-var spotify_1 = require("spotify");
 var app = (0, express_1.default)();
 var port = 8000;
-var spotify = new spotify_1.Spotify(process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
+spotify_1.Spotify.setClient(process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET);
 app.get("/", function (req, res) {
-    res.redirect(spotify.generateAuthUrl());
+    res.redirect(spotify_1.Spotify.generateAuthUrl());
 });
 app.get("/callback", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var code;
@@ -81,7 +82,7 @@ app.get("/callback", function (req, res) { return __awaiter(void 0, void 0, void
         switch (_b.label) {
             case 0:
                 code = (_a = req.query.code) === null || _a === void 0 ? void 0 : _a.toString();
-                return [4 /*yield*/, spotify.generateUserToken(code || "")];
+                return [4 /*yield*/, spotify_1.Spotify.generateUserToken(code || "")];
             case 1:
                 _b.sent();
                 res.redirect("/me");
@@ -90,57 +91,28 @@ app.get("/callback", function (req, res) { return __awaiter(void 0, void 0, void
     });
 }); });
 app.get("/me", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, spotify.getCurrentUser()];
-            case 1:
-                user = _a.sent();
-                res.send(user);
-                return [2 /*return*/];
-        }
+        // const user = await Spotify.getCurrentUser();
+        // const tracks = (await getVideoTracks()).map(transformTrack);
+        (0, needle_1.renderVideo)();
+        res.send({});
+        return [2 /*return*/];
     });
 }); });
-app.get("/playlists", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var playlists;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, spotify.getCurrentUserPlaylists()];
-            case 1:
-                playlists = _a.sent();
-                res.send(playlists);
-                return [2 /*return*/];
-        }
-    });
-}); });
-app.get("/playlists/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var playlistId, playlist;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                playlistId = req.params.id;
-                return [4 /*yield*/, spotify.getCurrentUserPlaylistTracks(playlistId)];
-            case 1:
-                playlist = _a.sent();
-                res.send(playlist);
-                return [2 /*return*/];
-        }
-    });
-}); });
-app.get('/tracks/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var trackId, track;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                trackId = req.params.id;
-                return [4 /*yield*/, spotify.getTrack(trackId)];
-            case 1:
-                track = _a.sent();
-                res.send(track);
-                return [2 /*return*/];
-        }
-    });
-}); });
+// app.get("/playlists", async (req, res) => {
+//   const playlists = await Spotify.getCurrentUserPlaylists();
+//   res.send(playlists);
+// });
+// app.get("/playlists/:id", async (req, res) => {
+//   const playlistId = req.params.id;
+//   const playlist = await Spotify.getCurrentUserPlaylistTracks(playlistId);
+//   res.send(playlist);
+// });
+// app.get("/tracks/:id", async (req, res) => {
+//   const trackId = req.params.id;
+//   const track = await Spotify.getTrack(trackId);
+//   res.send(track);
+// });
 app.listen(port, function () {
     console.log("Example app listening at http://localhost:".concat(port));
 });

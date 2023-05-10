@@ -1,7 +1,7 @@
 
 import { useAudioData, visualizeAudio } from "@remotion/media-utils";
 import { FC, useEffect, useState } from 'react';
-import { Audio, Img, spring, staticFile, useCurrentFrame, useVideoConfig, delayRender, continueRender } from 'remotion';
+import { Audio, Img, spring, useCurrentFrame, useVideoConfig, delayRender, continueRender } from 'remotion';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from './Player.module.scss';
@@ -22,7 +22,7 @@ const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl }) => {
   const parsedDuration = new Date(duration * 1000).toISOString().substr(14, 5);
   const { pushColor, getDominantColor } = useColor();
 
-  const audioData = useAudioData(staticFile(previewUrl));
+  const audioData = useAudioData(previewUrl);
 
   const [handle] = useState(() => delayRender('get image color'));
 
@@ -92,7 +92,7 @@ const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl }) => {
             </span>
           </div>
 
-          <Audio src={staticFile(previewUrl)} />
+          <Audio src={previewUrl} />
 
           <div className={styles.visualisationContainer}>
             {
