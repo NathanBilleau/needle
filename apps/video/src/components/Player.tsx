@@ -1,10 +1,11 @@
 
 import { useAudioData, visualizeAudio } from "@remotion/media-utils";
-import { FC } from 'react';
-import { Audio, Img, interpolateColors, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
+import { FC, useEffect, useState } from 'react';
+import { Audio, Img, spring, staticFile, useCurrentFrame, useVideoConfig, delayRender, continueRender } from 'remotion';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from './Player.module.scss';
+import { useColor } from "../contexts/ColorContext";
 
 interface Props {
   cover: string;
@@ -12,22 +13,26 @@ interface Props {
   artist: string;
   duration: number;
   previewUrl: string;
-  color: string;
-
-  isPlaying?: (color: string) => void
-  previousColor: string
 }
 
-const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl, color, isPlaying, previousColor }) => {
+const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl }) => {
 
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const parsedDuration = new Date(duration * 1000).toISOString().substr(14, 5);
+  const { pushColor, getDominantColor } = useColor();
 
   const audioData = useAudioData(staticFile(previewUrl));
 
-  const colorTransition = interpolateColors(frame, [0, .3 * fps], [previousColor, color]);
-  isPlaying?.(colorTransition);
+  const [handle] = useState(() => delayRender('get image color'));
+
+  useEffect(() => {
+    getDominantColor(cover).then(color => {
+      pushColor(color);
+      continueRender(handle);
+    }).catch(err => console.error(err));
+  }, [cover]);
+
 
   if (!audioData) {
     return null;
@@ -37,14 +42,14 @@ const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl, color, 
     fps,
     frame,
     audioData,
-    numberOfSamples: 16,
+    numberOfSamples: 32,
     smoothing: true,
   });
 
   const scaleCover = spring({
     fps,
     frame,
-    durationInFrames: .3 * fps,
+    durationInFrames: .5 * fps,
     config: {
       mass: 1,
       stiffness: 10
@@ -54,7 +59,7 @@ const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl, color, 
   const scalePlayer = spring({
     fps,
     frame: frame - .2 * fps,
-    durationInFrames: .3 * fps,
+    durationInFrames: .5 * fps,
     config: {
       mass: 1,
       stiffness: 10
@@ -96,7 +101,7 @@ const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl, color, 
                   key={index}
                   className={styles.visualisation}
                   style={{
-                    height: `${v * 200}%`,
+                    height: `${v * 150}%`,
                   }}
                 />
               ))
