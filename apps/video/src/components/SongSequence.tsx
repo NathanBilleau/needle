@@ -33,7 +33,7 @@ const SongSequence = ({ tracks }: { tracks : any}) => {
                   cover={song.image}
                   title={song.name}
                   artist={song.artists}
-                  duration={0}
+                  duration={song.duration}
                   previewUrl={song.previewUrl}
                 />
               </Series.Sequence>

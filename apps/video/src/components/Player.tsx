@@ -101,7 +101,7 @@ const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl }) => {
                   key={index}
                   className={styles.visualisation}
                   style={{
-                    height: `${v * 150}%`,
+                    height: `${v * 100}%`,
                   }}
                 />
               ))

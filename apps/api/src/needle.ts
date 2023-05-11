@@ -11,7 +11,7 @@ export const getCurrentMonthPlaylist = async () => {
   // const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, "0").toString();
   // const currentYear = new Date().getFullYear().toString().slice(-2).toString();
   // const currentPlaylistName = `${currentMonth}${currentYear}`;
-  const currentPlaylistName = '0223';
+  const currentPlaylistName = '0323';
 
   const playlists = await Spotify.getCurrentUserPlaylists();
   const currentPlaylist = playlists?.items?.find(playlist => playlist.name === currentPlaylistName);
@@ -59,6 +59,7 @@ export const transformTrack = (track: Track) => {
     image: track.track.album.images[0].url,
     previewUrl: track.track.preview_url,
     uri: track.track.uri,
+    duration: Math.round(track.track.duration_ms / 1000),
   }
 }
 
