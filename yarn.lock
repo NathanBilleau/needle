@@ -3229,6 +3229,11 @@ source-map@^0.8.0-beta.0:
   dependencies:
     whatwg-url "^7.0.0"
 
+spotify@*:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/spotify/-/spotify-0.3.0.tgz#42b85105cfc30f174c050f2227c21a9d7edb1be4"
+  integrity sha512-VxV3NmzJgpFTpvveLcqJwo6m0DH15ISqJmzG5ioCvndEdkRWYvHQ3EgDXH+aZCqT+rNbLHSy677FGcikJ2tCJw==
+
 sshpk@^1.7.0:
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/sshpk/-/sshpk-1.17.0.tgz#578082d92d4fe612b13007496e543fa0fbcbe4c5"

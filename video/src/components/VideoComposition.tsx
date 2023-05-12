@@ -3,7 +3,7 @@ import SongSequence from '../components/SongSequence';
 import { ColorProvider } from '../contexts/ColorContext';
 loadFont();
 
-export const VideoComposition = ({ tracks }: { tracks: any; }) => {
+export const VideoComposition = ({ tracks = [] }) => {
   return (
     <ColorProvider>
       <SongSequence tracks={tracks} />

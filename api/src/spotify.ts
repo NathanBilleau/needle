@@ -3,24 +3,19 @@ import { Playlist, Track } from "./interfaces/music";
 import { Response } from "./interfaces/response";
 
 export class Spotify {
-  static client_id = "";
-  static client_secret = "";
+  static clientId = "";
+  static clientSecret = "";
 
   static token = "";
   static refreshToken = "";
-  static expires_in = 0;
-
-  // constructor(client_id: string, client_secret: string) {
-  //   this.client_id = client_id;
-  //   this.client_secret = client_secret;
-  // }
+  static expiresIn = 0;
 
   /**
    * Set client id and client secret
    */
-  static setClient = (client_id: string, client_secret: string) => {
-    this.client_id = client_id;
-    this.client_secret = client_secret;
+  static setClient = (clientId: string, clientSecret: string) => {
+    this.clientId = clientId;
+    this.clientSecret = clientSecret;
   };
 
   /**
@@ -32,8 +27,8 @@ export class Spotify {
 
     const params = new URLSearchParams({
       response_type: "code",
-      client_id: this.client_id,
-      client_secret: this.client_secret,
+      client_id: this.clientId,
+      client_secret: this.clientSecret,
       scope: "user-read-private user-read-email",
       redirect_uri: "http://localhost:8000/callback",
       state,
@@ -52,8 +47,8 @@ export class Spotify {
       grant_type: "authorization_code",
       code,
       redirect_uri: "http://localhost:8000/callback",
-      client_id: this.client_id,
-      client_secret: this.client_secret,
+      client_id: this.clientId,
+      client_secret: this.clientSecret,
     });
 
     const token = await fetch("https://accounts.spotify.com/api/token", {
@@ -68,7 +63,7 @@ export class Spotify {
 
     this.token = response.access_token;
     this.refreshToken = response.refresh_token;
-    this.expires_in = response.expires_in;
+    this.expiresIn = response.expires_in;
 
     this.autoRefreshUserToken(code);
   };
@@ -81,7 +76,7 @@ export class Spotify {
   ) => {
     setTimeout(async () => {
       await this.generateUserToken(code);
-    }, this.expires_in * 1000 - 60 * 1000);
+    }, this.expiresIn * 1000 - 60 * 1000);
   };
 
   /**

@@ -1,17 +1,16 @@
-import { Spotify } from "spotify";
+import { Spotify } from "./spotify";
 import { bundle } from '@remotion/bundler';
 import { getCompositions, renderMedia } from '@remotion/renderer';
-import { Track } from "spotify/src/interfaces/music";
+import { Track } from "./interfaces/music";
 import path from "path";
 
 /**
  * Get current month Spotify playlist
  */
 export const getCurrentMonthPlaylist = async () => {
-  // const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, "0").toString();
-  // const currentYear = new Date().getFullYear().toString().slice(-2).toString();
-  // const currentPlaylistName = `${currentMonth}${currentYear}`;
-  const currentPlaylistName = '0323';
+  const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, "0").toString();
+  const currentYear = new Date().getFullYear().toString().slice(-2).toString();
+  const currentPlaylistName = `${currentMonth}${currentYear}`;
 
   const playlists = await Spotify.getCurrentUserPlaylists();
   const currentPlaylist = playlists?.items?.find(playlist => playlist.name === currentPlaylistName);

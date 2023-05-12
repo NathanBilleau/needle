@@ -11,8 +11,8 @@
     "dotenv": "^16.0.3"
   },
   "workspaces": [
-    "packages/*",
-    "apps/*"
+    "api",
+    "video"
   ],
   "devDependencies": {
     "@types/node": "^18.16.3",

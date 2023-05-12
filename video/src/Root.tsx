@@ -3,8 +3,8 @@ import { Composition } from 'remotion';
 import { VideoComposition } from './components/VideoComposition';
 loadFont();
 
-const fps = 60;
-const durationInSeconds = 60;
+const fps = 20;
+const durationInSeconds = 40;
 
 export const RemotionRoot: React.FC = () => {
 	return (
