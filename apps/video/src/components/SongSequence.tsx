@@ -15,11 +15,13 @@ const SongSequence = ({ tracks }: { tracks : any}) => {
   const songsDurationInFrames = Math.min(maxDuration * fps, Math.max(minDuration * fps, durationInFrames / tracks.length));
   const { currentColor } = useColor();
 
+  const weekNumber = Math.ceil((new Date().getTime() - new Date(new Date().getFullYear(), 0, 1).getTime()) / 604800000);
+
   return (
     <div className={styles.songSequenceContainer} style={{
       backgroundColor: currentColor,
     }}>
-      <h1 className={styles.weekTitle}>week <span className={styles.weekNumber}>#18</span></h1>
+      <h1 className={styles.weekTitle}>week <span className={styles.weekNumber}>#{weekNumber}</span></h1>
 
       <div className={styles.playersContainer}>
         <Series>
