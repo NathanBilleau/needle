@@ -133,10 +133,11 @@ export const renderVideo = async () => {
  * Schedule video render each week
  */
 export const scheduleVideoRender = () => {
-  const job = new CronJob('0 0 * * 0', async () => {
-    await renderVideo();
-  }, null, true, 'Europe/Paris');
+  renderVideo();
+  // const job = new CronJob('0 0 * * 0', async () => {
+  //   await renderVideo();
+  // }, null, true, 'Europe/Paris');
   
-  console.log('scheduling video render');
-  job.start();
+  // console.log('scheduling video render');
+  // job.start();
 }

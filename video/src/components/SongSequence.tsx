@@ -7,10 +7,10 @@ import { useColor } from "../contexts/ColorContext";
 // @ts-ignore
 import styles from "./SongSequence.module.scss";
 
-const maxDuration = 20;
+const maxDuration = 15;
 const minDuration = 5;
 
-const SongSequence = ({ tracks }: { tracks : any}) => {
+const SongSequence = ({ tracks }: { tracks : any }) => {
   const { durationInFrames, fps } = useVideoConfig();
   const songsDurationInFrames = Math.min(maxDuration * fps, Math.max(minDuration * fps, durationInFrames / tracks.length));
   const { currentColor } = useColor();
