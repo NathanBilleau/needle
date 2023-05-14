@@ -136,6 +136,7 @@ export const scheduleVideoRender = () => {
   const job = new CronJob('0 0 * * 0', async () => {
     await renderVideo();
   }, null, true, 'Europe/Paris');
-
+  
+  console.log('scheduling video render');
   job.start();
 }

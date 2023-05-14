@@ -35,8 +35,6 @@ loadFont();
 // ];
 
 export const VideoComposition = ({ tracks = [] }) => {
-  console.log(tracks);
-
   return (
     <ColorProvider>
       <SongSequence tracks={tracks} />

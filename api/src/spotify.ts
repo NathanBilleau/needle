@@ -1,6 +1,8 @@
 import { TokenResponse, UserProfile } from "./interfaces/auth";
 import { Playlist, Track } from "./interfaces/music";
 import { Response } from "./interfaces/response";
+import express from "express";
+import { scheduleVideoRender } from "./needle";
 
 export class Spotify {
   static clientId = "";
@@ -17,6 +19,49 @@ export class Spotify {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
   };
+
+  /**
+   * Start auth process (express api)
+   */
+  static auth = async () => new Promise<void>((resolve, reject) => {
+
+    const app = express();
+    const port = 8000;
+
+    /**
+     * Middleware to refuse access if token is already set
+     */
+    app.use((req, res, next) => {
+      if (this.token) {
+        res.send('token already set');
+      } else {
+        next();
+      }
+    });
+
+    app.get('/test', (_req, res) => {
+      res.send('test');
+    })
+
+    app.get("/", (_req, res) => {
+      res.redirect(Spotify.generateAuthUrl());
+    });
+
+    app.get("/callback", async (req, res) => {
+      const code = req.query.code?.toString();
+      await Spotify.generateUserToken(code || "");
+
+      scheduleVideoRender();
+      resolve();
+      res.send('generating video');
+    });
+
+    app.listen(port, () => {
+      console.log(`Example app listening at http://localhost:${port}`);
+    });
+    
+
+  });
 
   /**
    * Generate auth url to get Authorization Code
@@ -132,5 +177,5 @@ export class Spotify {
     });
 
     return await track.json();
-  }
+  };
 }

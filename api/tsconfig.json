@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
     /* Basic Options */
     "outDir": "dist",
     "rootDir": "src",
@@ -7,12 +8,11 @@
     //  express
     "moduleResolution": "node",
     "lib": ["ESNext"],
-    "target": "es5",
+    "target": "es2017",
     // "strict": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
 
   },
   "include": ["src"],
-  "references": [{ "path": "../../packages/spotify" } ]
 }
