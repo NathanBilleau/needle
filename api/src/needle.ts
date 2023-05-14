@@ -3,6 +3,8 @@ import { bundle } from '@remotion/bundler';
 import { getCompositions, renderMedia } from '@remotion/renderer';
 import { Track } from "./interfaces/music";
 import path from "path";
+import { enableSass } from 'video/src/enable-sass';
+import { CronJob } from 'cron'
 
 /**
  * Get current month Spotify playlist
@@ -16,7 +18,7 @@ export const getCurrentMonthPlaylist = async () => {
   const currentPlaylist = playlists?.items?.find(playlist => playlist.name === currentPlaylistName);
 
   return currentPlaylist;
-}
+};
 
 /**
  * Get current month Spotify playlist tracks
@@ -26,13 +28,25 @@ export const getCurrentMonthPlaylistTracks = async () => {
   const tracks = await Spotify.getPlaylistTracks(playlist?.id || "");
 
   return tracks?.items;
-}
+};
+
+/**
+ * Get tracks from the current week
+ */
+export const getCurrentWeekTracks = async () => {
+  const tracks = await getCurrentMonthPlaylistTracks();
+  const weekTracks = tracks.filter((track) => {
+    return track.added_at >= new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
+  });
+
+  return weekTracks;
+};
 
 /**
  * Get video tracks
  */
 export const getVideoTracks = async () => {
-  const tracks = await getCurrentMonthPlaylistTracks();
+  const tracks = await getCurrentWeekTracks();
   const tracksNumber = Math.max(Math.min(tracks.length, 6), 3);
 
   const pickedTracks = new Set();
@@ -44,7 +58,7 @@ export const getVideoTracks = async () => {
   }
 
   return Array.from(pickedTracks);
-}
+};
 
 /**
  * Transform track to simple track
@@ -59,28 +73,6 @@ export const transformTrack = (track: Track) => {
     previewUrl: track.track.preview_url,
     uri: track.track.uri,
     duration: Math.round(track.track.duration_ms / 1000),
-  }
-}
-
-export const enableSass = (currentConfiguration) => {
-  return {
-    ...currentConfiguration,
-    module: {
-      ...currentConfiguration.module,
-      rules: [
-        ...(currentConfiguration.module?.rules
-          ? currentConfiguration.module.rules
-          : []),
-        {
-          test: /\.s[ac]ss$/i,
-          use: [
-            { loader: "style-loader" },
-            { loader: "css-loader" },
-            { loader: "sass-loader", options: { sourceMap: true } },
-          ],
-        },
-      ],
-    },
   };
 };
 
@@ -89,10 +81,10 @@ export const enableSass = (currentConfiguration) => {
  */
 export const renderVideo = async () => {
   const tracks = (await getVideoTracks()).map(transformTrack);
-  console.time("render")
+  console.time("render");
   // The composition you want to render
   const compositionId = "MyComp";
- 
+
   // You only have to do this once, you can reuse the bundle.
   const entry = "../video/src/index.ts";
   console.log("Creating a Webpack bundle of the video");
@@ -100,12 +92,12 @@ export const renderVideo = async () => {
     // If you have a Webpack override, make sure to add it here
     webpackOverride: enableSass,
   });
- 
+
   // Parametrize the video by passing arbitrary props to your component.
   const inputProps = {
     tracks,
   };
- 
+
   // Extract all the compositions you have defined in your project
   // from the webpack bundle.
   const comps = await getCompositions(bundleLocation, {
@@ -114,16 +106,16 @@ export const renderVideo = async () => {
     // dimensions of the video.
     inputProps,
   });
- 
+
   // Select the composition you want to render.
   const composition = comps.find((c) => c.id === compositionId);
- 
+
   // Ensure the composition exists
   if (!composition) {
     throw new Error(`No composition with the ID ${compositionId} found.
   Review "${entry}" for the correct ID.`);
   }
- 
+
   const outputLocation = `out/${compositionId}.mp4`;
   console.log("Attempting to render:", outputLocation);
   await renderMedia({
@@ -133,6 +125,17 @@ export const renderVideo = async () => {
     outputLocation,
     inputProps,
   });
-  console.timeEnd("render")
+  console.timeEnd("render");
   console.log("Render done!");
+};
+
+/**
+ * Schedule video render each week
+ */
+export const scheduleVideoRender = () => {
+  const job = new CronJob('0 0 * * 0', async () => {
+    await renderVideo();
+  }, null, true, 'Europe/Paris');
+
+  job.start();
 }
