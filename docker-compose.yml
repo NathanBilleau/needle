@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  api:
+    build: ./
+    volumes:
+      - ./api/out/:/usr/src/app/api/out/
+    ports:
+      - "8000:8000"
+ 
