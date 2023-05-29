@@ -1,12 +1,16 @@
 {
   "name": "needle",
   "version": "1.0.0",
-  "description": "Personnal project - Generate a social video from a Spoify playlist (discovery of the week)",
+  "description": "Personnal project - Generate a social video from a Spotify playlist (discovery of the week)",
   "main": "index.js",
   "repository": "https://github.com/nathanbilleau/needle",
   "author": "Nathan BILLEAU",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "build": "cd api && yarn build",
+    "start": "cd api && yarn start"
+  },
   "dependencies": {
     "dotenv": "^16.0.3"
   },

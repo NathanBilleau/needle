@@ -1,0 +1,13 @@
+node_modules/
+dist/
+out/
+.git/
+yarn.lock
+package-lock.json
+
+api/node_modules/
+api/dist/
+
+video/node_modules/
+video/dist/
+video/out/

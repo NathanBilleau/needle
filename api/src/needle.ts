@@ -4,7 +4,7 @@ import { getCompositions, renderMedia } from '@remotion/renderer';
 import { Track } from "./interfaces/music";
 import path from "path";
 import { enableSass } from 'video/src/enable-sass';
-import { CronJob } from 'cron'
+// import { CronJob } from 'cron'
 
 /**
  * Get current month Spotify playlist
@@ -45,11 +45,11 @@ export const getCurrentWeekTracks = async () => {
 /**
  * Get video tracks
  */
-export const getVideoTracks = async () => {
+export const getVideoTracks = async (): Promise<Track[]> => {
   const tracks = await getCurrentWeekTracks();
   const tracksNumber = Math.max(Math.min(tracks.length, 6), 3);
 
-  const pickedTracks = new Set();
+  const pickedTracks = new Set<Track>();
   for (let i = 0; i < tracksNumber; i++) {
     const track = tracks[Math.floor(Math.random() * tracks.length)];
     if (!pickedTracks.has(track)) {
@@ -124,6 +124,9 @@ export const renderVideo = async () => {
     codec: "h264",
     outputLocation,
     inputProps,
+    concurrency: 6,
+    quality: 50,
+    videoBitrate: "1M"
   });
   console.timeEnd("render");
   console.log("Render done!");
