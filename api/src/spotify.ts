@@ -41,10 +41,11 @@ export class Spotify {
 
     app.get('/test', (_req, res) => {
       res.send('test');
-    })
+    });
 
     app.get("/", (_req, res) => {
-      res.redirect(Spotify.generateAuthUrl());
+      const authUrl = Spotify.generateAuthUrl();
+      res.redirect(authUrl);
     });
 
     app.get("/callback", async (req, res) => {
@@ -52,14 +53,14 @@ export class Spotify {
       await Spotify.generateUserToken(code || "");
 
       scheduleVideoRender();
-      resolve();
       res.send('generating video');
+      resolve();
     });
 
     app.listen(port, () => {
       console.log(`Example app listening at http://localhost:${port}`);
     });
-    
+
 
   });
 
@@ -105,7 +106,7 @@ export class Spotify {
     });
 
     const response: TokenResponse = await token.json();
-
+    
     this.token = response.access_token;
     this.refreshToken = response.refresh_token;
     this.expiresIn = response.expires_in;

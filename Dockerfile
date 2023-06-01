@@ -1,4 +1,10 @@
-FROM node:18.15.0-alpine
+FROM debian:bookworm-20230411
+RUN apt-get update
+RUN apt show chromium
+RUN apt-get install -y nodejs npm ffmpeg chromium
+
+# Specify the location of the Chromium browser
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -6,7 +12,8 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Install app dependencies
-RUN yarn install
+RUN yarn
+
 # Build app
 RUN yarn build
 

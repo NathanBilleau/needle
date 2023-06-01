@@ -3,16 +3,17 @@ import { bundle } from '@remotion/bundler';
 import { getCompositions, renderMedia } from '@remotion/renderer';
 import { Track } from "./interfaces/music";
 import path from "path";
-import { enableSass } from 'video/src/enable-sass';
-// import { CronJob } from 'cron'
+import { enableSass } from './enable-sass';
 
 /**
  * Get current month Spotify playlist
  */
 export const getCurrentMonthPlaylist = async () => {
-  const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, "0").toString();
-  const currentYear = new Date().getFullYear().toString().slice(-2).toString();
-  const currentPlaylistName = `${currentMonth}${currentYear}`;
+  console.log('getCurrentMonthPlaylist')
+  // const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, "0").toString();
+  // const currentYear = new Date().getFullYear().toString().slice(-2).toString();
+  // const currentPlaylistName = `${currentMonth}${currentYear}`;
+  const currentPlaylistName = '0523'
 
   const playlists = await Spotify.getCurrentUserPlaylists();
   const currentPlaylist = playlists?.items?.find(playlist => playlist.name === currentPlaylistName);
@@ -24,6 +25,7 @@ export const getCurrentMonthPlaylist = async () => {
  * Get current month Spotify playlist tracks
  */
 export const getCurrentMonthPlaylistTracks = async () => {
+  console.log('getCurrentMonthPlaylistTracks')
   const playlist = await getCurrentMonthPlaylist();
   const tracks = await Spotify.getPlaylistTracks(playlist?.id || "");
 
@@ -34,6 +36,7 @@ export const getCurrentMonthPlaylistTracks = async () => {
  * Get tracks from the current week
  */
 export const getCurrentWeekTracks = async () => {
+  console.log('getCurrentWeekTracks')
   const tracks = await getCurrentMonthPlaylistTracks();
   const weekTracks = tracks.filter((track) => {
     return track.added_at >= new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
@@ -46,6 +49,7 @@ export const getCurrentWeekTracks = async () => {
  * Get video tracks
  */
 export const getVideoTracks = async (): Promise<Track[]> => {
+  console.log('getVideoTracks')
   const tracks = await getCurrentWeekTracks();
   const tracksNumber = Math.max(Math.min(tracks.length, 6), 3);
 
@@ -64,6 +68,7 @@ export const getVideoTracks = async (): Promise<Track[]> => {
  * Transform track to simple track
  */
 export const transformTrack = (track: Track) => {
+  console.log('transformTrack')
   return {
     id: track.track.id,
     name: track.track.name,
@@ -80,6 +85,7 @@ export const transformTrack = (track: Track) => {
  * Render remotion video
  */
 export const renderVideo = async () => {
+  console.log('renderVideo')
   const tracks = (await getVideoTracks()).map(transformTrack);
   console.time("render");
   // The composition you want to render
@@ -136,6 +142,7 @@ export const renderVideo = async () => {
  * Schedule video render each week
  */
 export const scheduleVideoRender = () => {
+  console.log('scheduleVideoRender')
   renderVideo();
   // const job = new CronJob('0 0 * * 0', async () => {
   //   await renderVideo();
