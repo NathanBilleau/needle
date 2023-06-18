@@ -1,7 +1,10 @@
 FROM debian:bookworm-20230411
 RUN apt-get update
 RUN apt show chromium
-RUN apt-get install -y nodejs npm ffmpeg chromium
+RUN apt-get install -y nodejs npm ffmpeg chromium --fix-missing
+
+# Install yarn
+RUN npm install -g yarn
 
 # Specify the location of the Chromium browser
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
