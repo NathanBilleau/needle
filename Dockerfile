@@ -14,6 +14,9 @@ WORKDIR /usr/src/app
 
 COPY . .
 
+# yarn timeout
+RUN yarn config set network-timeout 600000 -g
+
 # Install app dependencies
 RUN yarn
 
