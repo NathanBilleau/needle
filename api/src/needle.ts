@@ -10,10 +10,9 @@ import { enableSass } from './enable-sass';
  */
 export const getCurrentMonthPlaylist = async () => {
   console.log('getCurrentMonthPlaylist')
-  // const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, "0").toString();
-  // const currentYear = new Date().getFullYear().toString().slice(-2).toString();
-  // const currentPlaylistName = `${currentMonth}${currentYear}`;
-  const currentPlaylistName = '0523'
+  const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, "0").toString();
+  const currentYear = new Date().getFullYear().toString().slice(-2).toString();
+  const currentPlaylistName = `${currentMonth}${currentYear}`;
 
   const playlists = await Spotify.getCurrentUserPlaylists();
   const currentPlaylist = playlists?.items?.find(playlist => playlist.name === currentPlaylistName);
@@ -70,7 +69,7 @@ export const getVideoTracks = async (): Promise<Track[]> => {
 export const transformTrack = (track: Track) => {
   console.log('transformTrack')
   return {
-    id: track.track.id,
+    id: track.track?.id,
     name: track.track.name,
     artists: track.track.artists.map((artist: any) => artist.name).join(", "),
     album: track.track.album.name,
