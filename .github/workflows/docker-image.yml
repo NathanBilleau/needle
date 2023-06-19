@@ -6,11 +6,16 @@ on:
   pull_request:
     branches: [ "main" ]
 
+
+# image should be built for arm64
+
 jobs:
 
   build:
 
     runs-on: ubuntu-latest
+    env:
+      DOCKER_TARGET_PLATFORM: linux/arm/v7
 
     steps:
     - uses: actions/checkout@v3
