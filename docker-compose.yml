@@ -5,6 +5,7 @@ services:
     build: ./
     volumes:
       - ./api/out/:/usr/src/app/api/out/
+      - ./node_modules:/usr/src/app/node_modules
     ports:
       - "8000:8000"
  
