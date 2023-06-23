@@ -20,13 +20,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag needle:$(date +%s)
+      run: docker build . --file Dockerfile --tag needle
     - name: Save the Docker image
-      run: docker save needle:$(date +%s) | gzip > needle-$(date +%s).tar.gz
-    - name: Upload the Docker image
-      run: ssh -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no -p 22 pi@${{ secrets.RASPBERRY_PI_IP }} "mkdir -p ~/docker-images && cat | gunzip | docker load"
+      run: docker save needle | gzip > needle.tar.gz
+    - name: Deploy project with SSH
+      uses: easingthemes/ssh-deploy@v2.1.4
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        RASPBERRY_PI_IP: ${{ secrets.RASPBERRY_PI_IP }}
-      shell: bash
-      working-directory: ./
+        REMOTE_HOST: ${{ secrets.RASPBERRY_PI_IP }}
+        REMOTE_USER: pi
+        SOURCE: "./"
+        TARGET: "~/needleImage"
