@@ -23,6 +23,11 @@ jobs:
       run: docker build . --file Dockerfile --tag needle
     - name: Save the Docker image
       run: docker save needle | gzip > needle.tar.gz
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
     - name: Deploy project with SSH
       uses: easingthemes/ssh-deploy@v2.1.4
       env:
