@@ -21,3 +21,12 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag needle:$(date +%s)
+    - name: Save the Docker image
+      run: docker save needle:$(date +%s) | gzip > needle-$(date +%s).tar.gz
+    - name: Upload the Docker image
+      run: ssh -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no -p 2222 pi@${{ secrets.RASPBERRY_PI_IP }} "mkdir -p ~/docker-images && cat | gunzip | docker load"
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        RASPBERRY_PI_IP: ${{ secrets.RASPBERRY_PI_IP }}
+      shell: bash
+      working-directory: ./
