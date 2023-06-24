@@ -23,11 +23,6 @@ jobs:
       run: docker build . --file Dockerfile --tag needle
     - name: Save the Docker image
       run: docker save needle | gzip > needle.tar.gz
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
     - name: List files
       run: ls -la
     - name: Deploy project with SSH
@@ -38,3 +33,18 @@ jobs:
         REMOTE_USER: pi
         SOURCE: "needle.tar.gz"
         TARGET: "~/needleImage"
+
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: List files
+  #     run: ls -la
+  #   - name: Deploy project with SSH
+  #     uses: easingthemes/ssh-deploy@v2.1.4
+  #     env:
+  #       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+  #       REMOTE_HOST: ${{ secrets.RASPBERRY_PI_IP }}
+  #       REMOTE_USER: pi
+  #       SOURCE: "needle.tar.gz"
+  #       TARGET: "~/needleImage"
