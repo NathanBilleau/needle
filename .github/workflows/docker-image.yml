@@ -28,11 +28,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+    - name: List files
+      run: ls -la
     - name: Deploy project with SSH
       uses: easingthemes/ssh-deploy@v2.1.4
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         REMOTE_HOST: ${{ secrets.RASPBERRY_PI_IP }}
         REMOTE_USER: pi
-        SOURCE: "./"
+        SOURCE: "needle.tar.gz"
         TARGET: "~/needleImage"
