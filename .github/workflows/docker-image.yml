@@ -30,6 +30,7 @@ jobs:
         path: needle.tar.gz
 
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     env:
       DOCKER_TARGET_PLATFORM: linux/arm/v7
@@ -44,6 +45,7 @@ jobs:
           TARGET: "~/needleImage"
     
   run: 
+    needs: deploy
     runs-on: ubuntu-latest
     env:
       DOCKER_TARGET_PLATFORM: linux/arm/v7
