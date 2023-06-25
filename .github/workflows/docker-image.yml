@@ -23,8 +23,13 @@ jobs:
       run: docker build . --file Dockerfile --tag needle
     - name: Save the Docker image
       run: docker save needle | gzip > needle.tar.gz
-    - name: List files
-      run: ls -la
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: needle.tar.gz
+        path: needle.tar.gz
+
+  deploy:
     - name: Deploy project with SSH
       uses: easingthemes/ssh-deploy@v2.1.4
       env:
@@ -33,6 +38,10 @@ jobs:
         REMOTE_USER: pi
         SOURCE: "needle.tar.gz"
         TARGET: "~/needleImage"
+    
+  run: 
+    - name: Run the Docker image
+      run: docker load < needle.tar.gz && docker run -d -p 8000:8000 needle -v /home/pi/needleImage:/usr/src/app/api/out/
 
   # deploy:
   #   needs: build
