@@ -21,15 +21,19 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag needle
-    # - name: Save the Docker image
-    #   run: docker save needle | gzip > needle.tar.gz
+    - name: Save the Docker image
+      run: docker save needle | gzip > needle.tar.gz
     - name: Install ssh keys
       run: | 
         install -m 600 -D /dev/null ~/.ssh/id_rsa
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.RASPBERRY_PI_IP }} > ~/.ssh/known_hosts
-    - name: Deploy to server
-      run: ssh -i ~/.ssh/id_rsa pi@${{ secrets.RASPBERRY_PI_IP }} "touch ~/test.txt"
+    - name: Copy image to pi
+      run: scp -i ~/.ssh/id_rsa needle.tar.gz pi@${{ secrets.RASPBERRY_PI_IP }}:~/needleImage
+    - name: Load image on pi
+      run: ssh -i ~/.ssh/id_rsa pi@${{ secrets.RASPBERRY_PI_IP }} "docker load < needle.tar.gz"
+    - name: Run image
+      run: ssh -i ~/.ssh/id_rsa pi@${{ secrets.RASPBERRY_PI_IP }} "docker load < needle.tar.gz && docker run -d -p 8000:8000 needle -v /home/pi/needleImage:/usr/src/app/api/out/"
 
 
     # - name: Upload a Build Artifact
