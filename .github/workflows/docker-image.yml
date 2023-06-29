@@ -29,11 +29,9 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.RASPBERRY_PI_IP }} > ~/.ssh/known_hosts
     - name: Copy image to pi
-      run: scp -i ~/.ssh/id_rsa needle.tar.gz pi@${{ secrets.RASPBERRY_PI_IP }}:~/needleImage
-    - name: Load image on pi
-      run: ssh -i ~/.ssh/id_rsa pi@${{ secrets.RASPBERRY_PI_IP }} "docker load < needle.tar.gz"
+      run: scp -i ~/.ssh/id_rsa needle.tar.gz pi@${{ secrets.RASPBERRY_PI_IP }}:~/apps/needle/needle.tar.gz
     - name: Run image
-      run: ssh -i ~/.ssh/id_rsa pi@${{ secrets.RASPBERRY_PI_IP }} "docker load < needle.tar.gz && docker run -d -p 8000:8000 needle -v /home/pi/needleImage:/usr/src/app/api/out/"
+      run: ssh -i ~/.ssh/id_rsa pi@${{ secrets.RASPBERRY_PI_IP }} "docker load < ~/apps/needle/needle.tar.gz && docker run -d -p 8000:8000 needle -v /home/pi/apps/needle/:/usr/src/app/api/out/"
 
 
     # - name: Upload a Build Artifact
