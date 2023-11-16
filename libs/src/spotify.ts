@@ -2,15 +2,24 @@ import { TokenResponse, UserProfile } from "./interfaces/auth";
 import { Playlist, Track } from "./interfaces/music";
 import { Response } from "./interfaces/response";
 import express from "express";
-import { scheduleVideoRender } from "./needle";
 
 export class Spotify {
   static clientId = "";
   static clientSecret = "";
-
+  
   static token = "";
   static refreshToken = "";
   static expiresIn = 0;
+  
+  /**
+   * Set the user token
+   * 
+   * It can be pulled from env, then set through this method
+   */
+  static setToken(token: string) {
+    console.log(`token: ${token}`);
+    this.token = token;
+  }
 
   /**
    * Set client id and client secret
@@ -44,6 +53,7 @@ export class Spotify {
     });
 
     app.get("/", (_req, res) => {
+      console.log(this.token);
       const authUrl = Spotify.generateAuthUrl();
       res.redirect(authUrl);
     });
@@ -51,9 +61,7 @@ export class Spotify {
     app.get("/callback", async (req, res) => {
       const code = req.query.code?.toString();
       await Spotify.generateUserToken(code || "");
-
-      scheduleVideoRender();
-      res.send('generating video');
+      res.send('ok');
       resolve();
     });
 
@@ -105,9 +113,9 @@ export class Spotify {
       body: params.toString(),
     });
 
-    const response: TokenResponse = await token.json();
-    
-    this.token = response.access_token;
+    const response = await token.json() as TokenResponse;
+
+    this.setToken(response.access_token);
     this.refreshToken = response.refresh_token;
     this.expiresIn = response.expires_in;
 
@@ -135,7 +143,7 @@ export class Spotify {
       },
     });
 
-    return await user.json();
+    return await user.json() as UserProfile;
   };
 
   /**
@@ -148,7 +156,7 @@ export class Spotify {
       },
     });
 
-    return await playlists.json();
+    return await playlists.json() as Response<Playlist>;
   };
 
   /**
@@ -164,7 +172,7 @@ export class Spotify {
       },
     );
 
-    return await playlists.json();
+    return await playlists.json() as Response<Track>;
   };
 
   /**

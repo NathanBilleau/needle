@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-import { Spotify } from "./spotify";
+import { Spotify } from "@needle/libs";
 
 dotenv.config({
   path: "../.env",

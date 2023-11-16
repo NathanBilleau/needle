@@ -1,0 +1,56 @@
+Arguments: 
+  /usr/local/bin/node /Users/nathanbilleau/.yarn/bin/yarn.js
+
+PATH: 
+  /opt/homebrew/opt/opencv@3/bin:/opt/homebrew/opt/php@7.4/bin:/Users/nathanbilleau/.yarn/bin:/Users/nathanbilleau/.config/yarn/global/node_modules/.bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/opt/homebrew/opt/opencv@3/bin:/opt/homebrew/opt/php@7.4/bin:/Users/nathanbilleau/.yarn/bin:/Users/nathanbilleau/.config/yarn/global/node_modules/.bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/Users/nathanbilleau/Library/Android/sdk/emulator:/Users/nathanbilleau/Library/Android/sdk/tools:/Users/nathanbilleau/Library/Android/sdk/tools/bin:/Users/nathanbilleau/Library/Android/sdk/platform-tools:/Users/nathanbilleau/.pub-cache/bin:/Users/nathanbilleau/Library/Android/sdk/emulator:/Users/nathanbilleau/Library/Android/sdk/tools:/Users/nathanbilleau/Library/Android/sdk/tools/bin:/Users/nathanbilleau/Library/Android/sdk/platform-tools:/Users/nathanbilleau/.pub-cache/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  20.9.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@needle%2flibs: Not found
+      at params.callback [as _callback] (/Users/nathanbilleau/.yarn/lib/cli.js:66145:18)
+      at self.callback (/Users/nathanbilleau/.yarn/lib/cli.js:140890:22)
+      at Request.emit (node:events:514:28)
+      at Request.<anonymous> (/Users/nathanbilleau/.yarn/lib/cli.js:141862:10)
+      at Request.emit (node:events:514:28)
+      at IncomingMessage.<anonymous> (/Users/nathanbilleau/.yarn/lib/cli.js:141784:12)
+      at Object.onceWrapper (node:events:628:28)
+      at IncomingMessage.emit (node:events:526:35)
+      at endReadableNT (node:internal/streams/readable:1408:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+
+npm manifest: 
+  {
+    "name": "@needle/api",
+    "version": "1.0.0",
+    "main": "dist/index.js",
+    "license": "MIT",
+    "private": true,
+    "scripts": {
+      "build": "tsc --build",
+      "start": "node dist/index.js",
+      "dev": "nodemon src/index.ts"
+    },
+    "dependencies": {
+      "dotenv": "^16.3.1",
+      "@needle/libs": "*"
+    },
+    "devDependencies": {
+      "@types/cron": "^2.0.1",
+      "@types/express": "^4.17.17",
+      "ts-node": "^10.9.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

@@ -1,9 +1,5 @@
 import { Spotify } from "./spotify";
-import { bundle } from '@remotion/bundler';
-import { getCompositions, renderMedia } from '@remotion/renderer';
 import { Track } from "./interfaces/music";
-import path from "path";
-import { enableSass } from './enable-sass';
 
 /**
  * Get current month Spotify playlist
@@ -79,74 +75,3 @@ export const transformTrack = (track: Track) => {
     duration: Math.round(track.track.duration_ms / 1000),
   };
 };
-
-/**
- * Render remotion video
- */
-export const renderVideo = async () => {
-  console.log('renderVideo')
-  const tracks = (await getVideoTracks()).map(transformTrack);
-  console.time("render");
-  // The composition you want to render
-  const compositionId = "MyComp";
-
-  // You only have to do this once, you can reuse the bundle.
-  const entry = "../video/src/index.ts";
-  console.log("Creating a Webpack bundle of the video");
-  const bundleLocation = await bundle(path.resolve(entry), () => undefined, {
-    // If you have a Webpack override, make sure to add it here
-    webpackOverride: enableSass,
-  });
-
-  // Parametrize the video by passing arbitrary props to your component.
-  const inputProps = {
-    tracks,
-  };
-
-  // Extract all the compositions you have defined in your project
-  // from the webpack bundle.
-  const comps = await getCompositions(bundleLocation, {
-    // You can pass custom input props that you can retrieve using getInputProps()
-    // in the composition list. Use this if you want to dynamically set the duration or
-    // dimensions of the video.
-    inputProps,
-  });
-
-  // Select the composition you want to render.
-  const composition = comps.find((c) => c.id === compositionId);
-
-  // Ensure the composition exists
-  if (!composition) {
-    throw new Error(`No composition with the ID ${compositionId} found.
-  Review "${entry}" for the correct ID.`);
-  }
-
-  const outputLocation = `out/${compositionId}.mp4`;
-  console.log("Attempting to render:", outputLocation);
-  await renderMedia({
-    composition,
-    serveUrl: bundleLocation,
-    codec: "h264",
-    outputLocation,
-    inputProps,
-    concurrency: 6,
-    jpegQuality: 50,
-    videoBitrate: "1M"
-  });
-  console.timeEnd("render");
-  console.log("Render done!");
-};
-
-/**
- * Schedule video render each week
- */
-export const scheduleVideoRender = () => {
-  console.log('scheduleVideoRender')
-  renderVideo();
-  // const job = new CronJob('0 0 * * 0', async () => {
-  //   await renderVideo();
-  // }, null, true, 'Europe/Paris');
-  
-  // console.log('scheduling video render');
-  // job.start();
-}

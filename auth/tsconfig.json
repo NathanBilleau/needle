@@ -12,7 +12,6 @@
     // "strict": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
-
   },
   "include": ["src"],
 }

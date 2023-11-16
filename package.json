@@ -1,5 +1,5 @@
 {
-  "name": "needle",
+  "name": "@needle/root",
   "version": "1.0.0",
   "description": "Personnal project - Generate a social video from a Spotify playlist (discovery of the week)",
   "main": "index.js",
@@ -15,8 +15,9 @@
     "dotenv": "^16.3.1"
   },
   "workspaces": [
-    "api",
-    "video"
+    "auth",
+    "video",
+    "libs"
   ],
   "devDependencies": {
     "@types/node": "^18.16.3",
