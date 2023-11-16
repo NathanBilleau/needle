@@ -1,7 +1,7 @@
-import { Config } from "remotion";
+import { Config } from '@remotion/cli/config';
 import { enableSass } from "./src/enable-sass";
 
-Config.setImageFormat("jpeg");
+Config.setVideoImageFormat("jpeg");
 Config.setOverwriteOutput(true);
 Config.overrideWebpackConfig(enableSass);
-Config.setQuality(100)
+Config.setJpegQuality(100);

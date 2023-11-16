@@ -1,5 +1,5 @@
 import { WebpackOverrideFn } from "@remotion/bundler";
-
+ 
 export const enableSass: WebpackOverrideFn = (currentConfiguration) => {
   return {
     ...currentConfiguration,
