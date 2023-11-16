@@ -130,7 +130,7 @@ export const renderVideo = async () => {
     outputLocation,
     inputProps,
     concurrency: 6,
-    quality: 50,
+    jpegQuality: 50,
     videoBitrate: "1M"
   });
   console.timeEnd("render");
