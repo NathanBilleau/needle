@@ -1,13 +1,14 @@
+// import {  } from "@needle/libs";
 import * as dotenv from "dotenv";
-import { Spotify } from "@needle/libs";
+import { SpotifyAuth } from "./spotifyAuth";
 
 dotenv.config({
   path: "../.env",
 });
 
-Spotify.setClient(
+SpotifyAuth.setClient(
   process.env.SPOTIFY_CLIENT_ID as string,
   process.env.SPOTIFY_CLIENT_SECRET as string,
 );
 
-Spotify.auth();
+SpotifyAuth.auth();

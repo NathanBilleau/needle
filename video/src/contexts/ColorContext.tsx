@@ -1,5 +1,5 @@
-import { FC, useState, useContext, createContext, useMemo } from 'react';
-import { useCurrentFrame, interpolateColors, useVideoConfig } from 'remotion';
+import { FC, createContext, useContext, useState } from 'react';
+import { interpolateColors, useCurrentFrame, useVideoConfig } from 'remotion';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ColorThief from 'colorthief';

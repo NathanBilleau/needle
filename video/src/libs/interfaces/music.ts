@@ -91,3 +91,14 @@ export interface Track {
     url: string;
   };
 };
+
+export interface ISimpleTrack {
+  id: string;
+  name: string;
+  artists: string;
+  album: string;
+  image: string;
+  previewUrl: string;
+  uri: string;
+  duration: number;
+}

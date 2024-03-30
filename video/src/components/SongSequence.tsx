@@ -5,14 +5,23 @@ import { Series, useVideoConfig } from "remotion";
 import { useColor } from "../contexts/ColorContext";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
+import { ISimpleTrack } from "../libs/interfaces/music";
 import styles from "./SongSequence.module.scss";
 
 const maxDuration = 15;
 const minDuration = 5;
 
-const SongSequence = ({ tracks }: { tracks : any }) => {
+const SongSequence = ({ tracks }: { tracks: ISimpleTrack[]; }) => {
   const { durationInFrames, fps } = useVideoConfig();
-  const songsDurationInFrames = Math.min(maxDuration * fps, Math.max(minDuration * fps, durationInFrames / tracks.length));
+
+  let filteredTracks = tracks;
+
+  // If the duration of the video is less than the minimum duration of the song, we need to remove some songs
+  if (durationInFrames / filteredTracks.length < minDuration * fps) {
+    filteredTracks = filteredTracks.slice(0, Math.floor(durationInFrames / (minDuration * fps)));
+  }
+
+  const songsDurationInFrames = Math.min(maxDuration * fps, Math.max(minDuration * fps, durationInFrames / filteredTracks.length));
   const { currentColor } = useColor();
 
   const weekNumber = Math.ceil((new Date().getTime() - new Date(new Date().getFullYear(), 0, 1).getTime()) / 604800000);
@@ -26,7 +35,7 @@ const SongSequence = ({ tracks }: { tracks : any }) => {
       <div className={styles.playersContainer}>
         <Series>
           {
-            tracks.map((song: any) => (
+            filteredTracks.map((song) => (
               <Series.Sequence
                 key={song.id}
                 layout="none"

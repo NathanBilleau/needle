@@ -1,11 +1,9 @@
 
 import { useAudioData, visualizeAudio } from "@remotion/media-utils";
 import { FC, useEffect, useState } from 'react';
-import { Audio, Img, spring, useCurrentFrame, useVideoConfig, delayRender, continueRender } from 'remotion';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import styles from './Player.module.scss';
+import { Audio, Img, continueRender, delayRender, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import { useColor } from "../contexts/ColorContext";
+import styles from './Player.module.scss';
 
 interface Props {
   cover: string;
@@ -31,7 +29,7 @@ const Player: FC<Props> = ({ cover, title, artist, duration, previewUrl }) => {
       pushColor(color);
       continueRender(handle);
     }).catch(err => console.error(err));
-  }, [cover]);
+  }, [cover, getDominantColor, handle, pushColor]);
 
 
   if (!audioData) {

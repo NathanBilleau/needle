@@ -11,6 +11,7 @@
   "repository": {},
   "license": "UNLICENSED",
   "dependencies": {
+    "@needle/libs": "*",
     "@remotion/cli": "^4.0.0",
     "@remotion/google-fonts": "^4.0.70",
     "colorthief": "^2.4.0",

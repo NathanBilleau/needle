@@ -1,40 +1,32 @@
 import { loadFont } from '@remotion/google-fonts/Outfit';
+import { useEffect, useState } from 'react';
+import { continueRender, delayRender, random } from 'remotion';
 import SongSequence from '../components/SongSequence';
 import { ColorProvider } from '../contexts/ColorContext';
+import { ISimpleTrack } from '../libs/interfaces/music';
+import { getCurrentWeekTracks } from '../libs/needle';
+
 loadFont();
 
-// Const songs = [
-//   {
-//     name: "Space train",
-//     artists: "Spiral Drive",
-//     duration: 3 * 60 + 28,
-//     previewUrl: 'bimbom.mp3',
-//     image: 'https://picsum.photos/id/237/700/700',
-//   },
-//   {
-//     name: "Bohemian Rhapsody",
-//     artists: "Queen",
-//     duration: 5 * 60 + 55,
-//     previewUrl: 'lalala.wav',
-//     image: 'https://picsum.photos/id/238/700/700',
-//   },
-//   {
-//     name: "Wish you were here",
-//     artists: "Pink Floyd",
-//     duration: 5 * 60 + 40,
-//     previewUrl: 'summer.wav',
-//     image: 'https://picsum.photos/id/239/700/700',
-//   },
-//   {
-//     name: "The Wall",
-//     artists: "Pink Floyd",
-//     duration: 5 * 60 + 40,
-//     previewUrl: 'canoe.mp3',
-//     image: 'https://picsum.photos/id/240/700/700',
-//   }
-// ];
+export const VideoComposition = () => {
+  const [tracks, setTracks] = useState<ISimpleTrack[]>([]);
 
-export const VideoComposition = ({ tracks = [] }) => {
+  useEffect(() => {
+    const handle = delayRender('get tracks');
+
+    getCurrentWeekTracks().then(videoTracks => {
+      const randomTracks = [];
+
+      // Randomize the tracks
+      for (let i = videoTracks.length; i > 0; i--) {
+        const randomIndex = Math.floor(random(i) * i);
+        randomTracks.push(videoTracks.splice(randomIndex, 1)[0]);
+      }
+      setTracks(randomTracks);
+      continueRender(handle);
+    });
+  }, []);
+
   return (
     <ColorProvider>
       <SongSequence tracks={tracks} />
